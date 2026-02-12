@@ -1,64 +1,60 @@
-from typing import List, Optional, Dict
 from src.animal import Animal
 
 class Zoo:
-    """Класс для управления зоопарком и коллекцией животных.
-        _name (str)
-        _location (str)
-        _animals (List[Animal]).
-    """
-
-    def __init__(self, name: str, location: str):
+    def __init__(self, name, location):
         self._name = name
         self._location = location
-        self._animals: List[Animal] = []
+        self._animals = []
 
     @property
-    def name(self) -> str:
+    def name(self):
         return self._name
 
     @property
-    def location(self) -> str:
+    def location(self):
         return self._location
 
     @property
-    def animals(self) -> List[Animal]:
-        return self._animals
-    
-    def add_animal(self, animal: Animal) -> None:
-            self._animals.append(animal)
-            print(f"{animal.name} был добавлен в {self._name}.")
+    def animals(self):
+        return self._animals[:]
 
-    def remove_animal(self, animal: Animal) -> None:
+    def add_animal(self, animal):
+        self._animals.append(animal)
 
-        self._animals.remove(animal)
-        print(f"{animal.name} покинул {self._name}.")
+    def remove_animal(self, animal):
+        if animal in self._animals:
+            self._animals.remove(animal)
+            return True
+        return False
 
-    def feed_all(self) -> None:
-        print("\n Пора есть")
-        for animal in self._animals:
-            animal.eat("стандартный рацион")
+    def get_animal_count(self):
+        return len(self._animals)
 
-    def exercise_all(self) -> None:
-        print("\n Время тренировки")
-        for animal in self._animals:
-            print(f"{animal.name} активно двигается!")
-            animal.make_sound()
-
-    def get_animal_by_name(self, name: str) -> Optional[Animal]:
+    def find_animal_by_name(self, name):
         for animal in self._animals:
             if animal.name == name:
                 return animal
         return None
 
-    def get_count_by_species(self, species_name: str) -> int:
+    def get_species_count(self, species):
         count = 0
         for animal in self._animals:
-            if type(animal).__name__ == species_name or getattr(animal, 'species', '') == species_name:
+            if animal.species == species:
                 count += 1
         return count
 
-    def display_animals(self) -> None:
-        print(f"\nЖивотные в {self._name} ({self._location}):")
+    def get_all_sounds(self):
+        return [animal.make_sound() for animal in self._animals]
+
+    def feed_all(self):
         for animal in self._animals:
-                print(f"- {animal.name} ({type(animal).__name__})")
+            animal.eat("Food")
+
+    def exercise_all(self, minutes):
+        for animal in self._animals:
+            animal.exercise(minutes)
+
+    def display_animals(self):
+        print(f"Zoo: {self._name}")
+        for animal in self._animals:
+            print(animal)
